@@ -1,6 +1,8 @@
 
 #include <QtCore/QCoreApplication>
+#include <qdebug.h>
 #include <iostream>
+#include <iomanip>
 #include "ChatClient.h"
 
 using namespace std;
@@ -14,6 +16,10 @@ bool sign_up();
 
 void chat_help();
 void chat();
+void show_users(QList<User> users);
+QString online_to_string(bool);
+
+QString q_tab(QString str, int width);
 
 int main(int argc, char *argv[])
 {
@@ -42,6 +48,7 @@ int main(int argc, char *argv[])
 
 	chat_help();
 	chat();
+	client.Disconnect();
 
 	return 0;
 }
@@ -143,7 +150,12 @@ void chat()
 
 		//Обработка команды
 		if (answer == "\\exit")return;
-		else if (answer == "\\users")return;
+		else if (answer == "\\users")
+		{
+			QList<User> users;
+			client.GetUsers(users);
+			show_users(users);
+		}
 		else if (answer == "\\help")
 		{
 			chat_help();
@@ -153,4 +165,43 @@ void chat()
 		//Отправка сообщения
 
 	}
+}
+
+//Выводит всех пользователей
+void show_users(QList<User> users)
+{
+	cout << "\nУчатники чата:\n";
+	cout << "|-------------------------|----------|\n";
+	cout << "| Имя                     | Статус   |\n";
+	cout << "|-------------------------|----------|\n";
+	for (int i = 0; i < users.size(); i++)
+	{
+		qDebug() << "|"<< q_tab(users[i].Name,25) << "|" << online_to_string(users[i].IsOnline) << "|\n";
+	}
+
+	cout << "|-------------------------|----------|\n";
+}
+
+//Переводит булевый статус в тект
+QString online_to_string(bool status)
+{
+	if (status)
+		return "online";
+	else
+		return "offline";
+}
+
+//Костыль для форматирования, раз toStdString не работает
+QString q_tab(QString str, int width)
+{
+	QString str2;
+	int sz = min(width, str.size());
+	int i;
+	for (i = 0; i < sz; i++)
+		str2 += str[i];
+
+	for (;i < width; i++)
+		str2 += " ";
+
+	return str2;
 }

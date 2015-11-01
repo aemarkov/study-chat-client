@@ -3,9 +3,21 @@
 
 ///////////////////////////// Сериализация ////////////////////////////////////
 //Для клиента
-int PacketCoderDecoder::CodeRequestLoadChat(const int chatId, char*& buffer)
+
+int PacketCoderDecoder::CodeRequestLoadChat(char*& buffer)
 {
-	return serialize(chatId, REQUEST_LOAD_CHAT, buffer);
+	int size = sizeof(PacketTypes);
+	buffer = new char[size];
+	Serializers::Serialize(REQUEST_LOAD_CHAT, buffer);
+	return size;
+}
+
+int PacketCoderDecoder::CodeRequestUsersList(char *& buffer)
+{
+	int size = sizeof(PacketTypes);
+	buffer = new char[size];
+	Serializers::Serialize(REQUEST_USERS_LIST, buffer);
+	return size;
 }
 
 int PacketCoderDecoder::CodeRequestUserRegister(const User& user, char*& buffer)
@@ -45,10 +57,10 @@ int PacketCoderDecoder::CodeDataUser(const User& user, char*& buffer)
 
 int PacketCoderDecoder::CodeDataError(char *& buffer)
 {
-	buffer = new char[sizeof(PacketTypes)];
-	PacketTypes t = DATA_ERROR;
-	memcpy(buffer, &t, sizeof(PacketTypes));
-	return sizeof(PacketTypes);
+	int size = sizeof(PacketTypes);
+	buffer = new char[size];
+	Serializers::Serialize(DATA_ERROR, buffer);
+	return size;
 }
 
 //для клиента и сервера
@@ -61,11 +73,6 @@ int PacketCoderDecoder::CodeDataMessage(const Message& message, char*& buffer)
 /////////////////////////// Десериализация //////////////////////////
 
 //для сервера
-int PacketCoderDecoder::DecodeRequestLoadChat(int& chatId, const char* buffer)
-{
-	return Serializers::Deserialize(chatId, buffer + sizeof(PacketTypes));
-}
-
 int PacketCoderDecoder::DecodeRequestUserRegister(User& user, const char* buffer)
 {
 	return Serializers::Deserialize(user, buffer + sizeof(PacketTypes));
@@ -74,19 +81,6 @@ int PacketCoderDecoder::DecodeRequestUserRegister(User& user, const char* buffer
 int PacketCoderDecoder::DecodeRequestUserConnect(User& cc, const char* buffer)
 {
 	return Serializers::Deserialize(cc, buffer + sizeof(PacketTypes));
-}
-
-int PacketCoderDecoder::DecodeRequestChatCreate(Chat& chat, const char* buffer)
-{
-	return Serializers::Deserialize(chat, buffer + sizeof(PacketTypes));
-}
-
-int PacketCoderDecoder::DecodeRequestAddUser(int& userId, int& chatId, const char* buffer)
-{
-	buffer += sizeof(PacketTypes);
-	buffer += Serializers::Deserialize(userId, buffer);
-	Serializers::Deserialize(chatId, buffer);
-	return sizeof(int) * 2;
 }
 
 
@@ -128,7 +122,7 @@ static int PacketCoderDecoder::code_list(const QList<T>& list, const PacketTypes
 	int pos;
 	buffer = new char[size];
 	pos = Serializers::Serialize(type, buffer);
-	Serializers::Serialize(list, buffer+pos);
+	Serializers::Serialize(list, buffer + pos);
 
 	return size;
 }
@@ -150,6 +144,6 @@ int PacketCoderDecoder::serialize(const T& t, const PacketTypes type, char*& buf
 	int pos;
 	buffer = new char[size];
 	pos = Serializers::Serialize(type, buffer);
-	Serializers::Serialize(t, buffer+pos);
+	Serializers::Serialize(t, buffer + pos);
 	return size;
 }

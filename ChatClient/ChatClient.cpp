@@ -29,9 +29,15 @@ bool ChatClinet::Login(QString name, QString password)
 
 	receive(buffer, pipe);
 	PacketTypes type = get_type(buffer);
-	delete[] buffer;
 
-	return  type != DATA_ERROR;
+	if (type == DATA_USER)
+	{
+		PacketCoderDecoder::DecodeDataUser(me, buffer);
+		delete[] buffer;
+		return true;
+	}
+	delete[] buffer;
+	return false;
 }
 
 //Регистрация
@@ -49,9 +55,52 @@ bool ChatClinet::Register(QString name, QString password)
 	//Ждем ответа
 	receive(buffer, pipe);
 	PacketTypes type = get_type(buffer);
+	
+
+	if (type == DATA_USER)
+	{
+		PacketCoderDecoder::DecodeDataUser(me, buffer);
+		delete[] buffer;
+		return true;
+	}
+
+	delete[] buffer;
+	return false;
+}
+
+bool ChatClinet::SendChatMessage(QString message)
+{
+	return false;
+}
+
+bool ChatClinet::LoadChat(Chat & chat)
+{
+	return false;
+}
+
+bool ChatClinet::GetUsers(QList<User>& users)
+{
+	//Отправляем данные
+	char* buffer;
+	int size = PacketCoderDecoder::CodeRequestUsersList(buffer);
+	send(buffer, size, pipe);
 	delete[] buffer;
 
-	return  type != DATA_ERROR;
+	//Ждем ответа
+	int a = receive(buffer, pipe);
+	PacketTypes type = get_type(buffer);
+	if (type == DATA_USERS_LIST)
+		PacketCoderDecoder::DecodeDataUsersList(users, buffer);
+	delete[] buffer;
+
+	return  type == DATA_USERS_LIST;
+}
+
+void ChatClinet::Disconnect()
+{
+	char* buffer;
+	int size = PacketCoderDecoder::CodeRequestClose(me.Id, buffer);
+	send(buffer, size, pipe);
 }
 
 ChatClinet::~ChatClinet()

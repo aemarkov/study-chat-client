@@ -47,8 +47,7 @@ int Serializers::Sizeof(const User& val)
 	return sizeof(int) +				//Id
 		Sizeof(val.Name) +				//Name
 		Sizeof(val.Password) +			//Password
-		sizeof(bool) +                  //IsOnline
-		Sizeof<int>(val.Chats);//		//Chats
+		sizeof(bool);	                //IsOnline
 }
 
 int Serializers::Serialize(const User& val, char* buffer)
@@ -58,7 +57,7 @@ int Serializers::Serialize(const User& val, char* buffer)
 	buffer += Serialize(val.Id, buffer);
 	buffer += Serialize(val.Name, buffer);
 	buffer += Serialize(val.Password, buffer);
-	buffer += Serialize(val.Chats, buffer);
+	buffer += Serialize(val.IsOnline, buffer);
 
 	return buffer - buffer0;
 }
@@ -71,7 +70,6 @@ int Serializers::Deserialize(User& val, const char* buffer)
 	buffer += Deserialize(val.Name, buffer);
 	buffer += Deserialize(val.Password, buffer);
 	buffer += Deserialize(val.IsOnline, buffer);
-	buffer += Deserialize(val.Chats, buffer);
 
 	return buffer - buffer0;
 }
