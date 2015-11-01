@@ -34,7 +34,7 @@ bool ChatClinet::Login(std::string name, std::string password)
 	{
 		PacketCoderDecoder::DecodeDataUser(me, buffer);
 		delete[] buffer;
-		return true;
+		return create_pipe();
 	}
 	delete[] buffer;
 	return false;
@@ -61,23 +61,34 @@ bool ChatClinet::Register(std::string name, std::string password)
 	{
 		PacketCoderDecoder::DecodeDataUser(me, buffer);
 		delete[] buffer;
-		return true;
+		return create_pipe();
 	}
 
 	delete[] buffer;
 	return false;
 }
 
+//Отправляет сообщение
 bool ChatClinet::SendChatMessage(std::string message)
 {
-	return false;
+	char* buffer;
+	Message msg;
+	msg.Text = message;
+	msg.Author = me;
+
+	int size = PacketCoderDecoder::CodeDataMessage(msg, buffer);
+	send(buffer, size, pipe);
+	delete[] buffer;
+	return true;
 }
 
+//Загружает чат - предыдущую историю сообщений
 bool ChatClinet::LoadChat(Chat & chat)
 {
 	return false;
 }
 
+//Получает список пользователей
 bool ChatClinet::GetUsers(QList<User>& users)
 {
 	//Отправляем данные
@@ -96,6 +107,7 @@ bool ChatClinet::GetUsers(QList<User>& users)
 	return  type == DATA_USERS_LIST;
 }
 
+//Отправляет  сигнал, что клиент откоючен
 void ChatClinet::Disconnect()
 {
 	char* buffer;
@@ -137,4 +149,55 @@ PacketTypes ChatClinet::get_type(char * buffer)
 	PacketTypes type;
 	memcpy(&type, buffer, sizeof(PacketTypes));
 	return type;
+}
+
+//Создает канал и поток для обратной асинхронной связи
+bool ChatClinet::create_pipe()
+{
+	char pipe_name[255];
+	sprintf(pipe_name, "\\\\.\\pipe\\%d", me.Id);
+
+	my_pipe = CreateNamedPipeA(pipe_name,
+		PIPE_ACCESS_DUPLEX,
+		PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT, PIPE_UNLIMITED_INSTANCES,
+		1024, 1024, 10000, NULL);
+	if (my_pipe == INVALID_HANDLE_VALUE)
+		return false;
+
+	CreateThread(NULL, 0, thread_func_wrapper, (LPVOID)this, NULL, NULL);
+
+	return true;
+}
+
+//Обертка над функцией потока
+DWORD ChatClinet::thread_func_wrapper(void * param)
+{
+	ChatClinet* context = static_cast<ChatClinet*>(param);
+	context->thread_func();
+	return 0;
+}
+
+//Функция потока
+void ChatClinet::thread_func()
+{
+	char* buffer;
+	Message message;
+
+	while (true)
+	{
+		//Ожидаем подключение к каналу и чтения
+		ConnectNamedPipe(my_pipe, NULL);
+		int size = receive(buffer, my_pipe);
+
+		//Принимаем сообщение
+		PacketCoderDecoder::DecodeDataMessage(message, buffer);
+		if (message.Author.Id != me.Id)
+		{
+			std::cout << std::setw(10) << std::left << message.Author.Name << message.Text << "\n";	
+			std::cout << "> ";
+		}
+			
+		DisconnectNamedPipe(my_pipe);
+
+	}
 }

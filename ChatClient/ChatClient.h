@@ -7,6 +7,8 @@
 #include <Windows.h>
 #include "Packets.h"
 #include <string>
+#include <iomanip>
+#include <iostream>
 
 class ChatClinet
 {
@@ -24,14 +26,13 @@ public:
 
 private:
 	HANDLE pipe;
+	HANDLE my_pipe;
 	User me;
 
-	//Отправляет данные и размер данных
-	bool send(char* buffer, int size, HANDLE pipe);
-
-	//Принимает данные
-	int receive(char*& buffer, HANDLE pipe);
-
-	//Определяет тип сообщения
-	PacketTypes get_type(char* buffer);
+	bool send(char* buffer, int size, HANDLE pipe);		//Отправляет данные и размер данных
+	int receive(char*& buffer, HANDLE pipe);			//Принимает данные
+	PacketTypes get_type(char* buffer);					//Определяет тип сообщения
+	bool create_pipe();									//Создает канал и поток для обратной асинхронной связи
+	static DWORD WINAPI thread_func_wrapper(void*);		//Обертка
+	void thread_func();									//Поток слушания
 };

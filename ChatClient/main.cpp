@@ -12,7 +12,7 @@ using namespace std;
 ChatClinet client;
 
 //Интерфейс
-int main_menu();
+char main_menu();
 bool login();
 bool sign_up();
 
@@ -38,15 +38,17 @@ int main(int argc, char *argv[])
 	}
 
 	//Показ главного меню
-	int answer = main_menu();
-	if (answer == 1)
+	char answer = main_menu();
+	if (answer == '1')
 	{
 		if (!sign_up())return 0;
 	}
-	else if (answer == 2)
+	else if (answer == '2')
 	{
 		if (!login())return 0;
 	}
+	else
+		return 0;
 
 	chat_help();
 	chat();
@@ -56,14 +58,17 @@ int main(int argc, char *argv[])
 }
 
 //Показывает главное меню
-int main_menu()
+char main_menu()
 {
-	cout << "          ГЛАВНОЕ МЕНЮ\n";
-	cout << "    1. Регистрация на сервере\n";
-	cout << "    2. Вход на сервер\n";
-	cout << "> ";
-	int answer;
+	cout << "-------------------------------------------------\n";
+	cout << "|              ГЛАВНОЕ МЕНЮ                     |\n";
+	cout << "-------------------------------------------------\n";
+	cout << "|   1. Регистрация на сервере                   |\n";
+	cout << "|   2. Вход на сервер                           |\n";
+	cout << "|> ";
+	char answer;
 	cin >> answer;
+	cout << "-------------------------------------------------\n";
 	return answer;
 }
 
@@ -71,28 +76,35 @@ int main_menu()
 bool login()
 {
 	bool repeat = false;
-	cout << "             ВХОД\n";
+	cout << "-------------------------------------------------\n";
+	cout << "|                   ВХОД                        |\n";
+	cout << "-------------------------------------------------\n";
 	do
 	{
 		repeat = false;
 		std::string name, password;
-		cout << "Имя:    ";
+		cout << "|   Имя:    ";
 		cin >> name;
-		cout << "Пароль: ";
+		cout << "|   Пароль: ";
 		cin >> password;
 		if (client.Login(name, password))
 		{
-			cout << "Успешный вход\n";
+			cout << "|   Успешный вход                               |\n";;
+			cout << "-------------------------------------------------\n";
 			return true;
 		}
 		else
 		{
 			char answer;
-			cout << "Ошибка. Попробовать снова? (y\\n) ";
+			cout << "|   Ошибка. Попробовать снова (y\\n)?           |\n";
 			cin >> answer;
 			if (answer == 'y')
 				repeat = true;
-			else return false;
+			else
+			{
+				cout << "-------------------------------------------------\n";
+				return false;
+			}
 		}
 	} while (repeat);
 }
@@ -101,29 +113,36 @@ bool login()
 bool sign_up()
 {
 	bool repeat = false;
-	cout << "          РЕГИСТРАЦИЯ\n";
+	cout << "-------------------------------------------------\n";
+	cout << "|              РЕГИСТРАЦИЯ                      |\n";
+	cout << "-------------------------------------------------\n";
 	do
 	{
 		repeat = false;
 		std::string name, password;
 		
-		cout << "Имя:    ";
+		cout << "|   Имя:    ";
 		cin >> name;
-		cout << "Пароль: ";
+		cout << "|   Пароль: ";
 		cin >> password;
 		if (client.Register(name,password))
 		{
-			cout << "Успешная регистрация\n";
+			cout << "|   Успешная регистрация                        |\n";;
+			cout << "-------------------------------------------------\n";
 			return true;
 		}
 		else
 		{
 			char answer;
-			cout << "Ошибка. Попробовать снова? (y\\n) ";
+			cout << "|   Ошибка. Попробовать снова (y\\n)?           |\n";
 			cin >> answer;
 			if (answer == 'y')
 				repeat = true;
-			else return false;
+			else
+			{
+				cout << "-------------------------------------------------\n";
+				return false;
+			}
 		}
 		
 
@@ -133,10 +152,13 @@ bool sign_up()
 //Меню чата
 void chat_help()
 {
-	cout << "         СПРАВКА\n";
-	cout << "\\exit     выход\n";
-	cout << "\\users    список пользователей\n";
-	cout << "\\help     просмотр справки\n";
+	cout << "-------------------------------------------------\n";
+	cout << "|                 СПРАВКА                       |\n";
+	cout << "-------------------------------------------------\n";
+	cout << "|   \\exit     выход                            |\n";
+	cout << "|   \\users    список пользователей             |\n";
+	cout << "|   \\help     просмотр справки                 |\n";
+	cout << "-------------------------------------------------\n";
 }
 
 //Цикл чата
@@ -157,6 +179,7 @@ void chat()
 			QList<User> users;
 			client.GetUsers(users);
 			show_users(users);
+			continue;
 		}
 		else if (answer == "\\help")
 		{
@@ -165,7 +188,7 @@ void chat()
 		}
 
 		//Отправка сообщения
-
+		client.SendChatMessage(answer);
 	}
 }
 
