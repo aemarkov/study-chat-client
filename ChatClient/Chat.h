@@ -13,7 +13,6 @@ class Chat
 {
 public:
 	int Id;								//Идентификатор чата
-	QList<int> Users;					//Список идентификаторов пользователе	
 	QLinkedList<Message> Messages;		//Список сообщений
 };
 

@@ -79,14 +79,13 @@ int Serializers::Deserialize(User& val, const char* buffer)
 ////////////////////////// Chat ///////////////////////////////////////////////
 int Serializers::Sizeof(const Chat& val)
 {
-	return sizeof(int) + Sizeof(val.Users) + Sizeof<Message>(val.Messages);
+	return sizeof(int) + Sizeof<Message>(val.Messages);
 }
 
 int Serializers::Serialize(const Chat& val, char* buffer)
 {
 	char* buffer0 = buffer;
 	buffer += Serialize(val.Id, buffer);
-	buffer += Serialize<int>(val.Users, buffer);
 	buffer += Serialize<Message>(val.Messages, buffer);
 	return buffer - buffer0;
 }
@@ -95,7 +94,6 @@ int Serializers::Deserialize(Chat& val, const char* buffer)
 {
 	const char* buffer0 = buffer;
 	buffer += Deserialize(val.Id, buffer);
-	buffer += Deserialize<int>(val.Users, buffer);
 	buffer += Deserialize<Message>(val.Messages, buffer);
 	return buffer - buffer0;
 }

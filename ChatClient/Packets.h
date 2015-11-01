@@ -28,12 +28,9 @@ enum PacketTypes
 	//(формально, создание нового пользователя и чата 
 	//передают информацию, но нет - не считается)
 	REQUEST_USERS_LIST,			//список пользователей
-	REQUEST_CHATS_LIST,			//список чатов
 	REQUEST_LOAD_CHAT,			//загрузка чата
 	REQUEST_USER_REGISTER,		//регистрация
 	REQUEST_USER_CONNECT,		//подключение
-	REQUEST_CREATE_CHAT,		//создание чата
-	REQUEST_ADD_USER,			//добавление пользователя в чат
 	REQUEST_CLOSE,				//отключение клиента
 
 	DATA_MESSAGE,				//пришло сообщение. Этот же запрос отсылает сервер
@@ -43,7 +40,6 @@ enum PacketTypes
 	//чаще от сервера клиентам                               //на эти запросы
 	//но не обязательно
 	DATA_USERS_LIST,			//список пользователей       REQUSET_USERS_LIST
-	DATA_CHATS_LIST,			//список чатов               REQUEST_CHATS_LIST
 	DATA_CHAT,					//содержимое чата            REQUEST_LOAD_CHAT, REQUEST_CREATE_CHAT
 	DATA_USER,					//инфа о юзере               REQUEST_USER_REGISTER, REQUEST_USER_CONNECT
 	DATA_ERROR					//Ошибка

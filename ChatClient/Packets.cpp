@@ -18,21 +18,6 @@ int PacketCoderDecoder::CodeRequestUserConnect(const User& cc, char*& buffer)
 	return serialize(cc, REQUEST_USER_CONNECT, buffer);
 }
 
-int PacketCoderDecoder::CodeRequestChatCreate(const Chat& chat, char*& buffer)
-{
-	return serialize(chat, REQUEST_CREATE_CHAT, buffer);
-}
-
-int PacketCoderDecoder::CodeRequestAddUser(const int userId, const int chatId, char*& buffer)
-{
-	int size = sizeof(PacketTypes)+ sizeof(int) * 2;
-	int pos;
-	buffer = new char[size];
-	pos = Serializers::Serialize(REQUEST_ADD_USER, buffer);
-	pos += Serializers::Serialize(userId, buffer+pos);
-	Serializers::Serialize(chatId, buffer+pos);
-	return size;
-}
 
 int PacketCoderDecoder::CodeRequestClose(const int userId, char*& buffer)
 {
@@ -46,14 +31,6 @@ int PacketCoderDecoder::CodeRequestClose(const int userId, char*& buffer)
 int PacketCoderDecoder::CodeDataUsersList(const QList<User>& users, char*& buffer)
 {
 	return code_list(users, DATA_USERS_LIST, buffer);
-}
-
-int PacketCoderDecoder::CodeDataChatsList(const QList<Chat>& chats, char*& buffer)
-{
-	QList<ChatOnlyInfo> coi;
-	for (int i = 0; i < chats.count(); i++)
-		coi.append(ChatOnlyInfo(chats[i]));
-	return code_list(coi, DATA_CHATS_LIST, buffer);
 }
 
 int PacketCoderDecoder::CodeDataChat(const Chat& chat, char*& buffer)
