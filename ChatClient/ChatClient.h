@@ -18,7 +18,7 @@ public:
 	bool Login(std::string name, std::string password);
 	bool Register(std::string name, std::string password);
 	bool SendChatMessage(std::string message);
-	bool LoadChat(Chat& chat);
+	bool LoadChat();
 	bool GetUsers(QList<User>& users);
 	void Disconnect();
 
@@ -35,4 +35,5 @@ private:
 	bool create_pipe();									//Создает канал и поток для обратной асинхронной связи
 	static DWORD WINAPI thread_func_wrapper(void*);		//Обертка
 	void thread_func();									//Поток слушания
+	void write_message(Message);						//Печатает сообщение
 };

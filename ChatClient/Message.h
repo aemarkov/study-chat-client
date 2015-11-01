@@ -11,4 +11,10 @@ public:
 	int Id;
 	std::string Text;
 	User Author;
+
+
+	~Message()
+	{
+
+	}
 };

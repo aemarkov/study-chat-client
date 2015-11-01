@@ -83,8 +83,28 @@ bool ChatClinet::SendChatMessage(std::string message)
 }
 
 //Загружает чат - предыдущую историю сообщений
-bool ChatClinet::LoadChat(Chat & chat)
+bool ChatClinet::LoadChat()
 {
+	//Отправляем запрос
+	int size;
+	char* buffer;
+	size = PacketCoderDecoder::CodeRequestLoadChat(buffer);
+	send(buffer, size, pipe);
+	delete[] buffer;
+
+	//Ждем ответа
+	receive(buffer, pipe);
+	PacketTypes type = get_type(buffer);
+	if (type == DATA_CHAT)
+	{
+		Chat chat;
+		PacketCoderDecoder::DecodeDataChat(chat, buffer);
+		for (auto i = chat.Messages.begin(); i != chat.Messages.end(); ++i)
+			write_message(*i);
+		
+		return true;
+	}
+
 	return false;
 }
 
@@ -98,7 +118,7 @@ bool ChatClinet::GetUsers(QList<User>& users)
 	delete[] buffer;
 
 	//Ждем ответа
-	int a = receive(buffer, pipe);
+	receive(buffer, pipe);
 	PacketTypes type = get_type(buffer);
 	if (type == DATA_USERS_LIST)
 		PacketCoderDecoder::DecodeDataUsersList(users, buffer);
@@ -192,12 +212,16 @@ void ChatClinet::thread_func()
 		//Принимаем сообщение
 		PacketCoderDecoder::DecodeDataMessage(message, buffer);
 		if (message.Author.Id != me.Id)
-		{
-			std::cout << std::setw(10) << std::left << message.Author.Name << message.Text << "\n";	
-			std::cout << "> ";
-		}
+			write_message(message);
 			
 		DisconnectNamedPipe(my_pipe);
 
 	}
+}
+
+
+void ChatClinet::write_message(Message message)
+{
+	std::cout << std::setw(10) << std::left << message.Author.Name << message.Text << "\n";
+	std::cout << "> ";
 }

@@ -164,31 +164,37 @@ void chat_help()
 //Цикл чата
 void chat()
 {
-	string answer;
+	//Подгрузка старой истории
+	cout << "> ";
+	client.LoadChat();
+
+
+	char input[1024];
+	cin.get();	//Нужно убрать лишний энтер
 
 	while (true)
 	{
 		//Ввод сообщеняи\команды
-		cout << "> ";
-		cin >> answer;
+		cin.getline(input, 1024);
 
 		//Обработка команды
-		if (answer == "\\exit")return;
-		else if (answer == "\\users")
+		if (strcmp(input,"\\exit")==0)return;
+		else if (strcmp(input,"\\users")==0)
 		{
 			QList<User> users;
 			client.GetUsers(users);
 			show_users(users);
 			continue;
 		}
-		else if (answer == "\\help")
+		else if (strcmp(input,"\\help")==0)
 		{
 			chat_help();
 			continue;
 		}
 
 		//Отправка сообщения
-		client.SendChatMessage(answer);
+		client.SendChatMessage(input);
+		cout << "> ";
 	}
 }
 
