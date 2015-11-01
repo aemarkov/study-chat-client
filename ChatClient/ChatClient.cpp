@@ -16,14 +16,22 @@ bool ChatClinet::ConnectToServer(const TCHAR * pipe_name)
 //Вход
 bool ChatClinet::Login(QString name, QString password)
 {
+	//Отправляем данные
 	char* buffer;
 	User user;
 	user.Name = name;
 	user.Password = password;
 	int size = PacketCoderDecoder::CodeRequestUserConnect(user, buffer);
 	send(buffer, size, pipe);
+	delete[] buffer;
 
-	return false;
+	//Ждем ответа
+
+	receive(buffer, pipe);
+	PacketTypes type = get_type(buffer);
+	delete[] buffer;
+
+	return  type != DATA_ERROR;
 }
 
 //Регистрация

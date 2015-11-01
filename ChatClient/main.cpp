@@ -12,7 +12,8 @@ int main_menu();
 bool login();
 bool sign_up();
 
-int chat_menu();
+void chat_help();
+void chat();
 
 int main(int argc, char *argv[])
 {
@@ -31,11 +32,16 @@ int main(int argc, char *argv[])
 	//Показ главного меню
 	int answer = main_menu();
 	if (answer == 1)
+	{
 		if (!sign_up())return 0;
+	}
 	else if (answer == 2)
+	{
 		if (!login())return 0;
+	}
 
-	chat_menu();
+	chat_help();
+	chat();
 
 	return 0;
 }
@@ -55,26 +61,43 @@ int main_menu()
 //Вход на сервер
 bool login()
 {
-	std::string name, password;
+	bool repeat = false;
 	cout << "             ВХОД\n";
-	cout << "Имя:    ";
-	cin >> name;
-	cout << "Пароль: ";
-	cin >> password;
-	client.Login(QString(name.c_str()), QString(password.c_str()));
-	return 0;
+	do
+	{
+		repeat = false;
+		std::string name, password;
+		cout << "Имя:    ";
+		cin >> name;
+		cout << "Пароль: ";
+		cin >> password;
+		if (client.Login(QString(name.c_str()), QString(password.c_str())))
+		{
+			cout << "Успешный вход\n";
+			return true;
+		}
+		else
+		{
+			char answer;
+			cout << "Ошибка. Попробовать снова? (y\\n) ";
+			cin >> answer;
+			if (answer == 'y')
+				repeat = true;
+			else return false;
+		}
+	} while (repeat);
 }
 
 //Регистрация
 bool sign_up()
 {
 	bool repeat = false;
+	cout << "          РЕГИСТРАЦИЯ\n";
 	do
 	{
 		repeat = false;
-
 		std::string name, password;
-		cout << "          РЕГИСТРАЦИЯ\n";
+		
 		cout << "Имя:    ";
 		cin >> name;
 		cout << "Пароль: ";
@@ -87,7 +110,7 @@ bool sign_up()
 		else
 		{
 			char answer;
-			cout << "Ошибка. Попробовать снова? (y\n) ";
+			cout << "Ошибка. Попробовать снова? (y\\n) ";
 			cin >> answer;
 			if (answer == 'y')
 				repeat = true;
@@ -99,15 +122,35 @@ bool sign_up()
 }
 
 //Меню чата
-int chat_menu()
+void chat_help()
 {
-	cout << "             МЕНЮ\n";
-	cout << "    1. Просмотр чатов\n";
-	cout << "    2. Просмотр пользователей\n";
-	cout << "    3. Создать чат\n";
-	cout << "    4. Присоединиться к чату\n";
-	cout << "> ";
-	int answer;
-	cin >> answer;
-	return answer;
+	cout << "         СПРАВКА\n";
+	cout << "\\exit     выход\n";
+	cout << "\\users    список пользователей\n";
+	cout << "\\help     просмотр справки\n";
+}
+
+//Цикл чата
+void chat()
+{
+	string answer;
+
+	while (true)
+	{
+		//Ввод сообщеняи\команды
+		cout << "> ";
+		cin >> answer;
+
+		//Обработка команды
+		if (answer == "\\exit")return;
+		else if (answer == "\\users")return;
+		else if (answer == "\\help")
+		{
+			chat_help();
+			continue;
+		}
+
+		//Отправка сообщения
+
+	}
 }
