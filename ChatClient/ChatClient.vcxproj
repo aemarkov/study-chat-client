@@ -137,7 +137,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Chat.cpp" />
+    <ClCompile Include="ChatClient.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Packets.cpp" />
+    <ClCompile Include="Serializers.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Chat.h" />
+    <ClInclude Include="ChatClient.h" />
+    <ClInclude Include="Message.h" />
+    <ClInclude Include="Packets.h" />
+    <ClInclude Include="Serializers.h" />
+    <ClInclude Include="User.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
