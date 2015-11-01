@@ -2,11 +2,11 @@
 
 //Представляет сообщения в чате
 
-#include <qstring.h>
+#include <string>
 
 class Message
 {
 public:
 	int Id;
-	QString Text;
+	std::string Text;
 };

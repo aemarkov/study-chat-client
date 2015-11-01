@@ -5,14 +5,14 @@
 */
 
 #include <qlist.h>
-#include <qstring.h>
+#include <string>
 
 class User
 {
 public:
 	int Id;								//Идентификатор
-	QString Name;						//Имя
-	QString Password;					//Пароль
+	std::string Name;						//Имя
+	std::string Password;					//Пароль
 	bool IsOnline;						//Подключен ли к серверу
 
 	QList<int> Chats;					//Идентификаторы чатов

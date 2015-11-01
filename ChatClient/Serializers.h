@@ -15,10 +15,10 @@ class Serializers
 
 public:
 
-	//QString
-	static int Sizeof(const QString& string);
-	static int Serialize(const QString& string, char* data);
-	static int Deserialize(QString& string, const char* data);
+	//std::string
+	static int Sizeof(const std::string& string);
+	static int Serialize(const std::string& string, char* data);
+	static int Deserialize(std::string& string, const char* data);
 
 	//QList
 	//Возвращает размер буфера для хранения сериализованного списка
@@ -133,7 +133,8 @@ private:
 		T element;
 		for (int i = 0; i < size; i++)
 		{
-			data += Deserialize(element, data);
+			int d = Deserialize(element, data);
+			data += d;
 			list.append(element);
 		}
 
@@ -151,7 +152,10 @@ private:
 
 		//Записываем элементы
 		for (auto i = list.begin(); i != list.end(); ++i)
-			data += Serialize(*i, data);
+		{
+			int d = Serialize(*i, data);
+			data += d;
+		}
 		
 
 		return sizeof(int) + list.count()*sizeof(T);

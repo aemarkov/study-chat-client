@@ -3,7 +3,9 @@
 #include <qdebug.h>
 #include <iostream>
 #include <iomanip>
+
 #include "ChatClient.h"
+#include "User.h"
 
 using namespace std;
 
@@ -17,7 +19,7 @@ bool sign_up();
 void chat_help();
 void chat();
 void show_users(QList<User> users);
-QString online_to_string(bool);
+string online_to_string(bool);
 
 QString q_tab(QString str, int width);
 
@@ -78,7 +80,7 @@ bool login()
 		cin >> name;
 		cout << "Пароль: ";
 		cin >> password;
-		if (client.Login(QString(name.c_str()), QString(password.c_str())))
+		if (client.Login(name, password))
 		{
 			cout << "Успешный вход\n";
 			return true;
@@ -109,7 +111,7 @@ bool sign_up()
 		cin >> name;
 		cout << "Пароль: ";
 		cin >> password;
-		if (client.Register(QString(name.c_str()), QString(password.c_str())))
+		if (client.Register(name,password))
 		{
 			cout << "Успешная регистрация\n";
 			return true;
@@ -176,32 +178,17 @@ void show_users(QList<User> users)
 	cout << "|-------------------------|----------|\n";
 	for (int i = 0; i < users.size(); i++)
 	{
-		qDebug() << "|"<< q_tab(users[i].Name,25) << "|" << online_to_string(users[i].IsOnline) << "|\n";
+		cout << "|"<<setw(25)<<std::left<<users[i].Name << "|" <<setw(10) <<std::left<< online_to_string(users[i].IsOnline) << "|\n";
 	}
 
 	cout << "|-------------------------|----------|\n";
 }
 
 //Переводит булевый статус в тект
-QString online_to_string(bool status)
+string online_to_string(bool status)
 {
 	if (status)
 		return "online";
 	else
 		return "offline";
-}
-
-//Костыль для форматирования, раз toStdString не работает
-QString q_tab(QString str, int width)
-{
-	QString str2;
-	int sz = min(width, str.size());
-	int i;
-	for (i = 0; i < sz; i++)
-		str2 += str[i];
-
-	for (;i < width; i++)
-		str2 += " ";
-
-	return str2;
 }

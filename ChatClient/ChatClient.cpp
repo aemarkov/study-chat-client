@@ -14,7 +14,7 @@ bool ChatClinet::ConnectToServer(const TCHAR * pipe_name)
 }
 
 //Вход
-bool ChatClinet::Login(QString name, QString password)
+bool ChatClinet::Login(std::string name, std::string password)
 {
 	//Отправляем данные
 	char* buffer;
@@ -41,7 +41,7 @@ bool ChatClinet::Login(QString name, QString password)
 }
 
 //Регистрация
-bool ChatClinet::Register(QString name, QString password)
+bool ChatClinet::Register(std::string name, std::string password)
 {
 	//Отправляем данные
 	char* buffer;
@@ -68,7 +68,7 @@ bool ChatClinet::Register(QString name, QString password)
 	return false;
 }
 
-bool ChatClinet::SendChatMessage(QString message)
+bool ChatClinet::SendChatMessage(std::string message)
 {
 	return false;
 }

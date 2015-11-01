@@ -5,17 +5,17 @@
 */
 
 #include <Windows.h>
-#include <qstring.h>
 #include "Packets.h"
+#include <string>
 
 class ChatClinet
 {
 public:
 
 	bool ConnectToServer(const TCHAR* pipe_name);
-	bool Login(QString name, QString password);
-	bool Register(QString name, QString password);
-	bool SendChatMessage(QString message);
+	bool Login(std::string name, std::string password);
+	bool Register(std::string name, std::string password);
+	bool SendChatMessage(std::string message);
 	bool LoadChat(Chat& chat);
 	bool GetUsers(QList<User>& users);
 	void Disconnect();

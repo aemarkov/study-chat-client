@@ -1,15 +1,15 @@
 #include "Serializers.h"
 
-///////////////////////////// QString ////////////////////////////////////////
+///////////////////////////// STD::STRING ////////////////////////////////////////
 //Размер буфера под строку
-int Serializers::Sizeof(const QString& string)
+int Serializers::Sizeof(const std::string& string)
 {
 	int size = (string.size() + 1);		//Размер строки+нуль-символ
-	return size*sizeof(QChar) + sizeof(size);
+	return size*sizeof(char) + sizeof(size);
 }
 
-//Сереализует QString
-int Serializers::Serialize(const QString& string, char* data)
+//Сереализует string
+int Serializers::Serialize(const std::string & string, char* data)
 {
 	int size = (string.size() + 1);		//Размер строки+нуль-символ
 
@@ -17,13 +17,13 @@ int Serializers::Serialize(const QString& string, char* data)
 	memcpy(data, &size, sizeof(size));
 
 	//Записываем строку
-	memcpy(data + sizeof(size), string.data(), size*sizeof(QChar));
+	memcpy(data + sizeof(size), string.c_str(), size);
 
-	return size*sizeof(QChar) + sizeof(size);
+	return size*sizeof(char) + sizeof(size);
 }
 
-//Десериализует QString
-int Serializers::Deserialize(QString& string, const char* data)
+//Десериализует string
+int Serializers::Deserialize(std::string& string, const char* data)
 {
 	int size;			//Размер строки+нуль-символ
 
@@ -32,9 +32,11 @@ int Serializers::Deserialize(QString& string, const char* data)
 	string.resize(size - 1);
 
 	//Считываем строку
-	memcpy(string.data(), data + sizeof(size), sizeof(QChar)*size);
+	char* cstr = new char[size];
+	memcpy(cstr, data + sizeof(size), sizeof(QChar)*size);
+	string = std::string(cstr);
 
-	return size*sizeof(QChar) + sizeof(size);
+	return size*sizeof(char) + sizeof(size);
 }
 
 ///////////////////////// Простые типы ////////////////////////////////////////
