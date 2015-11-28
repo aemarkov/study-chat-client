@@ -22,12 +22,12 @@ bool ChatClinet::Login(std::string name, std::string password)
 	user.Name = name;
 	user.Password = password;
 	int size = PacketCoderDecoder::CodeRequestUserConnect(user, buffer);
-	send(buffer, size, pipe);
+	if (!send(buffer, size, pipe))return false;
 	delete[] buffer;
 
 	//Ждем ответа
 
-	receive(buffer, pipe);
+	if (!receive(buffer, pipe))return false;
 	PacketTypes type = get_type(buffer);
 
 	if (type == DATA_USER)
@@ -37,7 +37,8 @@ bool ChatClinet::Login(std::string name, std::string password)
 		return create_pipe();
 	}
 	delete[] buffer;
-	return false;
+
+	return true;
 }
 
 //Регистрация
@@ -49,11 +50,11 @@ bool ChatClinet::Register(std::string name, std::string password)
 	user.Name = name;
 	user.Password = password;
 	int size = PacketCoderDecoder::CodeRequestUserRegister(user, buffer);
-	send(buffer, size, pipe);
+	if (!send(buffer, size, pipe))return false;
 	delete[] buffer;
 
 	//Ждем ответа
-	receive(buffer, pipe);
+	if (!receive(buffer, pipe))return false;
 	PacketTypes type = get_type(buffer);
 	
 
@@ -65,7 +66,7 @@ bool ChatClinet::Register(std::string name, std::string password)
 	}
 
 	delete[] buffer;
-	return false;
+	return true;
 }
 
 //Отправляет сообщение
@@ -76,9 +77,11 @@ bool ChatClinet::SendChatMessage(std::string message)
 	msg.Text = message;
 	msg.Author = me;
 
+	//Отправляем данные
 	int size = PacketCoderDecoder::CodeDataMessage(msg, buffer);
-	send(buffer, size, pipe);
+	if (!send(buffer, size, pipe))return false;
 	delete[] buffer;
+
 	return true;
 }
 
@@ -89,11 +92,11 @@ bool ChatClinet::LoadChat()
 	int size;
 	char* buffer;
 	size = PacketCoderDecoder::CodeRequestLoadChat(buffer);
-	send(buffer, size, pipe);
+	if (!send(buffer, size, pipe))return false;
 	delete[] buffer;
 
 	//Ждем ответа
-	receive(buffer, pipe);
+	if (!receive(buffer, pipe))return false;
 	PacketTypes type = get_type(buffer);
 	if (type == DATA_CHAT)
 	{
@@ -114,11 +117,11 @@ bool ChatClinet::GetUsers(QList<User>& users)
 	//Отправляем данные
 	char* buffer;
 	int size = PacketCoderDecoder::CodeRequestUsersList(buffer);
-	send(buffer, size, pipe);
+	if (!send(buffer, size, pipe))return false;
 	delete[] buffer;
 
 	//Ждем ответа
-	receive(buffer, pipe);
+	if (!receive(buffer, pipe))return false;
 	PacketTypes type = get_type(buffer);
 	if (type == DATA_USERS_LIST)
 		PacketCoderDecoder::DecodeDataUsersList(users, buffer);
@@ -145,8 +148,19 @@ bool ChatClinet::send(char * buffer, int size, HANDLE pipe)
 {
 	DWORD bw;
 	WriteFile(pipe, &size, sizeof(size), &bw, NULL);
+	if (bw != sizeof(size))
+	{
+		delete[] buffer;
+		return false;
+	}
+
 	WriteFile(pipe, buffer, size, &bw, NULL);
-	return false;
+	if (bw != size)
+	{
+		delete[] buffer;
+		return false;
+	}
+	return true;
 }
 
 int ChatClinet::receive(char*& buffer, HANDLE pipe)
@@ -156,10 +170,16 @@ int ChatClinet::receive(char*& buffer, HANDLE pipe)
 
 	//Читаем размер буфера
 	ReadFile(pipe, &size, sizeof(int), &br, NULL);
+	if (br != sizeof(int))return -1;
 	buffer = new char[size];
 
 	//Читаем данные
 	ReadFile(pipe, buffer, size, &br, NULL);
+	if (br != size)
+	{
+		delete[] buffer;
+		return -1;
+	}
 
 	return size;
 }

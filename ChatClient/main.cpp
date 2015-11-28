@@ -166,7 +166,8 @@ void chat()
 {
 	//Подгрузка старой истории
 	cout << "> ";
-	client.LoadChat();
+	if (!client.LoadChat())
+		cout << "Не удалось загрузить чат\n";
 
 
 	char input[1024];
@@ -182,8 +183,10 @@ void chat()
 		else if (strcmp(input,"\\users")==0)
 		{
 			QList<User> users;
-			client.GetUsers(users);
-			show_users(users);
+			if (client.GetUsers(users))
+				show_users(users);
+			else
+				cout << "Не удалось загрузить список пользователей\n";
 			continue;
 		}
 		else if (strcmp(input,"\\help")==0)
@@ -193,7 +196,8 @@ void chat()
 		}
 
 		//Отправка сообщения
-		client.SendChatMessage(input);
+		if (!client.SendChatMessage(input))
+			cout << "Не удалось отправить сообщение\n";
 		cout << "> ";
 	}
 }
