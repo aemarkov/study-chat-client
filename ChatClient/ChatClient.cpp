@@ -27,7 +27,7 @@ bool ChatClinet::Login(std::string name, std::string password)
 
 	//∆дем ответа
 
-	if (!receive(buffer, pipe))return false;
+	if (receive(buffer, pipe)==-1)return false;
 	PacketTypes type = get_type(buffer);
 
 	if (type == DATA_USER)
@@ -54,7 +54,7 @@ bool ChatClinet::Register(std::string name, std::string password)
 	delete[] buffer;
 
 	//∆дем ответа
-	if (!receive(buffer, pipe))return false;
+	if (receive(buffer, pipe)==-1)return false;
 	PacketTypes type = get_type(buffer);
 	
 
@@ -96,7 +96,7 @@ bool ChatClinet::LoadChat()
 	delete[] buffer;
 
 	//∆дем ответа
-	if (!receive(buffer, pipe))return false;
+	if (receive(buffer, pipe)==-1)return false;
 	PacketTypes type = get_type(buffer);
 	if (type == DATA_CHAT)
 	{
@@ -121,7 +121,7 @@ bool ChatClinet::GetUsers(std::vector<User>& users)
 	delete[] buffer;
 
 	//∆дем ответа
-	if (!receive(buffer, pipe))return false;
+	if (receive(buffer, pipe)==-1)return false;
 	PacketTypes type = get_type(buffer);
 	if (type == DATA_USERS_LIST)
 		PacketCoderDecoder::DecodeDataUsersList(users, buffer);
