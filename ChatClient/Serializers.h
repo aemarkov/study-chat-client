@@ -20,50 +20,50 @@ public:
 	static int Serialize(const std::string& string, char* data);
 	static int Deserialize(std::string& string, const char* data);
 
-	//QList
+	//vector
 	//Возвращает размер буфера для хранения сериализованного списка
 	template <class T>
-	static int Sizeof(const QList<T>& list)
+	static int Sizeof(const std::vector<T>& list)
 	{
-		return get_list_buffer_size<QList<T>, T>((QList<T>)list);
+		return get_list_buffer_size<std::vector<T>, T>((std::vector<T>)list);
 	}
 
 	//Сериализует список
 	template <class T>
-	static int Serialize(const QList<T>& list, char* data)
+	static int Serialize(const std::vector<T>& list, char* data)
 	{
-		return serialize_list<QList<T>, T>(list, data);
+		return serialize_list<std::vector<T>, T>(list, data);
 	}
 
 	//Десериализует список
 	//Предполагается, что передан массив верной длины
 	template <class T>
-	static int Deserialize(QList<T>& list, const char* data)
+	static int Deserialize(std::vector<T>& list, const char* data)
 	{
-		return deserialize_list<QList<T>, T>(list, data);
+		return deserialize_list<std::vector<T>, T>(list, data);
 	}
 
-	//QLinkedList
+	//list
 	//Возвращает размер буфера для хранения связанного списка
 	template <class T>
-	static int Sizeof(const QLinkedList<T>& list)
+	static int Sizeof(const std::list<T>& list)
 	{
-		return get_list_buffer_size<QLinkedList<T>, T>(list);
+		return get_list_buffer_size<std::list<T>, T>(list);
 	}
 
 	//Сериализует связанный список
 	template <class T>
-	static int Serialize(const QLinkedList<T>& list, char* data)
+	static int Serialize(const std::list<T>& list, char* data)
 	{
-		return serialize_list<QLinkedList<T>, T>(list, data);
+		return serialize_list<std::list<T>, T>(list, data);
 	}
 
 	//Десериализует связанный список
 	//Предполагается, что передан массив верной длины
 	template <class T>
-	static int Deserialize(QLinkedList<T>& list, const char* data)
+	static int Deserialize(std::list<T>& list, const char* data)
 	{
-		return deserialize_list<QLinkedList<T>, T>(list, data);
+		return deserialize_list<std::list<T>, T>(list, data);
 	}
 	
 	//Простые типы*, которые можно сериализовать
@@ -104,11 +104,6 @@ public:
 	static int Serialize(const Chat& val, char* buffer);
 	static int Deserialize(Chat& val, const char* buffer);
 
-	//ChatOnlyInfo
-	static int Sizeof(const ChatOnlyInfo& val);
-	static int Serialize(const ChatOnlyInfo& val, char* buffer);
-	static int Deserialize(ChatOnlyInfo& val, const char* buffer);
-
 private:
 	//Возвращает размер, необходимый для хранения списка
 	template <class LIST, class T>
@@ -135,10 +130,10 @@ private:
 		{
 			int d = Deserialize(element, data);
 			data += d;
-			list.append(element);
+			list.push_back(element);
 		}
 
-		return list.count()*sizeof(T);
+		return list.size()*sizeof(T);
 	}
 
 	//Сереализует список-шаблон
@@ -146,7 +141,7 @@ private:
 	static int serialize_list(const LIST list, char* data)
 	{
 		//Записываем размер
-		int size = list.count();
+		int size = list.size();
 		memcpy(data, &size, sizeof(int));
 		data += sizeof(int);  //Смещение указателя
 
@@ -158,6 +153,6 @@ private:
 		}
 		
 
-		return sizeof(int) + list.count()*sizeof(T);
+		return sizeof(int) + list.size()*sizeof(T);
 	}
 };

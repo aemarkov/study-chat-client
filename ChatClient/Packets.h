@@ -7,7 +7,7 @@
 Эти класс общий и для клиента, и для сервера
 
 Все они наследуются от одного базового класса и сереализуются одинаково.
-Чтобы сервер\клиент могли корректно выделить память, пакет передаются в два
+Чтобы сервер\клиент могли корректно выделить память, пакет передаются в два 
 примема: сначала заголовок с длиной и типом, потом сами данные
 
 |------------------------------| |-------------------------------------|
@@ -36,18 +36,18 @@ enum PacketTypes
 	DATA_MESSAGE,				//пришло сообщение. Этот же запрос отсылает сервер
 								//клиентам, когда в чат пришло сообщение
 
-								//Передача информации                                    //Это может быть ответом
-								//чаще от сервера клиентам                               //на эти запросы
-								//но не обязательно
+	//Передача информации                                    //Это может быть ответом
+	//чаще от сервера клиентам                               //на эти запросы
+	//но не обязательно
 	DATA_USERS_LIST,			//список пользователей       REQUSET_USERS_LIST
 	DATA_CHAT,					//содержимое чата            REQUEST_LOAD_CHAT, REQUEST_CREATE_CHAT
 	DATA_USER,					//инфа о юзере               REQUEST_USER_REGISTER, REQUEST_USER_CONNECT
 	DATA_ERROR					//Ошибка
-
+	
 };
 
 /*
-Этот класс представляет ряд методов по кодированию и
+Этот класс представляет ряд методов по кодированию и 
 декодированию объектов разного типа.
 В отличие от сериализаторов объектов, эти методы
 ВЫДЕЛЯЮТ память под буфер сами.
@@ -55,7 +55,7 @@ enum PacketTypes
 class PacketCoderDecoder
 {
 public:
-
+	
 	//Сериализация
 	//для клиента
 	static int CodeRequestLoadChat(char*& buffer);
@@ -65,7 +65,7 @@ public:
 	static int CodeRequestClose(const int userId, char*& buffer);
 
 	//Для сервера
-	static int CodeDataUsersList(const QList<User>& users, char*& buffer);
+	static int CodeDataUsersList(const std::vector<User>& users, char*& buffer);
 	static int CodeDataChat(const Chat& chat, char*& buffer);
 	static int CodeDataUser(const User& user, char*& buffer);
 	static int CodeDataError(char*& buffer);
@@ -80,8 +80,8 @@ public:
 
 
 	//для клиента
-	static int DecodeDataUsersList(QList<User>& users, const char* buffer);
-	static int DecodeDataChatsList(QList<Chat>& chats, const char* buffer);
+	static int DecodeDataUsersList(std::vector<User>& users, const char* buffer);
+	static int DecodeDataChatsList(std::vector<Chat>& chats, const char* buffer);
 	static int DecodeDataChat(Chat& chat, const char* buffer);
 	static int DecodeDataUser(User& user, const char* buffer);
 
@@ -91,11 +91,11 @@ public:
 private:
 	//Сериализация списка
 	template <class T>
-	static int code_list(const QList<T>& list, const PacketTypes type, char*& buffer);
+	static int code_list(const std::vector<T>& list, const PacketTypes type, char*& buffer);
 
 	//Десериализация списков
 	template <class T>
-	static int decode_list(QList<T>& list, const char* buffer);
+	static int decode_list(std::vector<T>& list, const char* buffer);
 
 	//Сериализует просто тип
 	template <class T>

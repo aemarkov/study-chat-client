@@ -4,16 +4,19 @@
 Представляет пользователя
 */
 
-#include <qlist.h>
+#include <vector>
 #include <string>
+#include <Windows.h>
 
 class User
 {
 public:
 	int Id;								//Идентификатор
-	std::string Name;						//Имя
-	std::string Password;					//Пароль
+	std::string Name;					//Имя
+	std::string Password;				//Пароль
 	bool IsOnline;						//Подключен ли к серверу
 
-	QList<int> Chats;					//Идентификаторы чатов
+	char pipe_name[255];				//Имя канала для широковещательного ответа
+
+	std::vector<int> Chats;				//Идентификаторы чатов
 };

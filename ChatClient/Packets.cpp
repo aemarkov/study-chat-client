@@ -4,6 +4,7 @@
 ///////////////////////////// Сериализация ////////////////////////////////////
 //Для клиента
 
+
 int PacketCoderDecoder::CodeRequestLoadChat(char*& buffer)
 {
 	int size = sizeof(PacketTypes);
@@ -40,9 +41,33 @@ int PacketCoderDecoder::CodeRequestClose(const int userId, char*& buffer)
 }
 
 //Для сервера
-int PacketCoderDecoder::CodeDataUsersList(const QList<User>& users, char*& buffer)
+int PacketCoderDecoder::CodeDataUsersList(const std::vector<User>& users, char*& buffer)
 {
-	return code_list(users, DATA_USERS_LIST, buffer);
+	//Этот карнавал нужен, чтобы не отправлять пользовательские пароли
+	
+	//Определяем размер буфера
+	int size = sizeof(PacketTypes) + sizeof(int);
+	for (int i = 0;i < users.size(); i++)
+	{
+		User u = users[i];
+		u.Password = "";
+		size += Serializers::Sizeof(u);
+	}
+
+	//Отправляем
+	int pos;
+	buffer = new char[size];
+	PacketTypes type = DATA_USERS_LIST;
+	pos = Serializers::Serialize(type, buffer);
+	pos += Serializers::Serialize(users.size(), buffer + pos);
+
+	for (int i = 0; i < users.size(); i++)
+	{
+		User u = users[i];
+		u.Password = "";
+		pos += Serializers::Serialize(u, buffer + pos);
+	}
+	return size;
 }
 
 int PacketCoderDecoder::CodeDataChat(const Chat& chat, char*& buffer)
@@ -85,12 +110,12 @@ int PacketCoderDecoder::DecodeRequestUserConnect(User& cc, const char* buffer)
 
 
 //для клиента
-int PacketCoderDecoder::DecodeDataUsersList(QList<User>& users, const char* buffer)
+int PacketCoderDecoder::DecodeDataUsersList(std::vector<User>& users, const char* buffer)
 {
 	return decode_list(users, buffer + sizeof(PacketTypes));
 }
 
-int PacketCoderDecoder::DecodeDataChatsList(QList<Chat>& chats, const char* buffer)
+int PacketCoderDecoder::DecodeDataChatsList(std::vector<Chat>& chats, const char* buffer)
 {
 	return decode_list(chats, buffer + sizeof(PacketTypes));
 }
@@ -114,7 +139,7 @@ int PacketCoderDecoder::DecodeDataMessage(Message& message, const char* buffer)
 /////////////////////////////////////////////////////////////////////
 //Сериализация списка
 template <class T>
-static int PacketCoderDecoder::code_list(const QList<T>& list, const PacketTypes type, char*& buffer)
+static int PacketCoderDecoder::code_list(const std::vector<T>& list, const PacketTypes type, char*& buffer)
 {
 	//Определяем размер
 	//Код пакета + число записей + необходимое место для каждой запис
@@ -122,14 +147,14 @@ static int PacketCoderDecoder::code_list(const QList<T>& list, const PacketTypes
 	int pos;
 	buffer = new char[size];
 	pos = Serializers::Serialize(type, buffer);
-	Serializers::Serialize(list, buffer + pos);
+	Serializers::Serialize(list, buffer+pos);
 
 	return size;
 }
 
 //Десериализация списков
 template <class T>
-static int PacketCoderDecoder::decode_list(QList<T>& list, const char* buffer)
+static int PacketCoderDecoder::decode_list(std::vector<T>& list, const char* buffer)
 {
 	const char* buffer0 = buffer;
 	buffer += Serializers::Deserialize(list, buffer);
@@ -144,6 +169,6 @@ int PacketCoderDecoder::serialize(const T& t, const PacketTypes type, char*& buf
 	int pos;
 	buffer = new char[size];
 	pos = Serializers::Serialize(type, buffer);
-	Serializers::Serialize(t, buffer + pos);
+	Serializers::Serialize(t, buffer+pos);
 	return size;
 }

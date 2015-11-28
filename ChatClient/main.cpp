@@ -1,6 +1,3 @@
-
-#include <QtCore/QCoreApplication>
-#include <qdebug.h>
 #include <iostream>
 #include <iomanip>
 
@@ -18,10 +15,8 @@ bool sign_up();
 
 void chat_help();
 void chat();
-void show_users(QList<User> users);
+void show_users(std::vector<User> users);
 string online_to_string(bool);
-
-QString q_tab(QString str, int width);
 
 int main(int argc, char *argv[])
 {
@@ -182,7 +177,7 @@ void chat()
 		if (strcmp(input,"\\exit")==0)return;
 		else if (strcmp(input,"\\users")==0)
 		{
-			QList<User> users;
+			std::vector<User> users;
 			if (client.GetUsers(users))
 				show_users(users);
 			else
@@ -203,7 +198,7 @@ void chat()
 }
 
 //Выводит всех пользователей
-void show_users(QList<User> users)
+void show_users(std::vector<User> users)
 {
 	cout << "\nУчатники чата:\n";
 	cout << "|-------------------------|----------|\n";

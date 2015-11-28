@@ -33,7 +33,7 @@ int Serializers::Deserialize(std::string& string, const char* data)
 
 	//—читываем строку
 	char* cstr = new char[size];
-	memcpy(cstr, data + sizeof(size), sizeof(QChar)*size);
+	memcpy(cstr, data + sizeof(size), sizeof(char)*size);
 	string = std::string(cstr);
 
 	return size*sizeof(char) + sizeof(size);
@@ -98,27 +98,6 @@ int Serializers::Deserialize(Chat& val, const char* buffer)
 	return buffer - buffer0;
 }
 
-////////////////////////// Chat  Only Info ////////////////////////////////////
-int Serializers::Sizeof(const ChatOnlyInfo & val)
-{
-	return sizeof(int) + Sizeof(val.Users);
-}
-
-int Serializers::Serialize(const ChatOnlyInfo & val, char* buffer)
-{
-	char* buffer0 = buffer;
-	buffer += Serialize(val.Id, buffer);
-	buffer += Serialize<int>(val.Users, buffer);
-	return buffer - buffer0;
-}
-
-int Serializers::Deserialize(ChatOnlyInfo & val, const char* buffer)
-{
-	const char* buffer0 = buffer;
-	buffer += Deserialize(val.Id, buffer);
-	buffer += Deserialize<int>(val.Users, buffer);
-	return buffer - buffer0;
-}
 
 /////////////////////////// Message //////////////////////////////////////////
 int Serializers::Sizeof(const Message& val)

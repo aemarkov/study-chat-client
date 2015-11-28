@@ -112,7 +112,7 @@ bool ChatClinet::LoadChat()
 }
 
 //Получает список пользователей
-bool ChatClinet::GetUsers(QList<User>& users)
+bool ChatClinet::GetUsers(std::vector<User>& users)
 {
 	//Отправляем данные
 	char* buffer;

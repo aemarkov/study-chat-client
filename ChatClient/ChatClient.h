@@ -9,6 +9,7 @@
 #include <string>
 #include <iomanip>
 #include <iostream>
+#include <vector>
 
 class ChatClinet
 {
@@ -19,7 +20,7 @@ public:
 	bool Register(std::string name, std::string password);
 	bool SendChatMessage(std::string message);
 	bool LoadChat();
-	bool GetUsers(QList<User>& users);
+	bool GetUsers(std::vector<User>& users);
 	void Disconnect();
 
 	~ChatClinet();

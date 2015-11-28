@@ -5,24 +5,12 @@
 Хранит идентификаторы пользователей, сообщения
 */
 
-#include <qlist.h>
-#include <qlinkedlist.h>
+#include <list>
 #include "Message.h"
 
 class Chat
 {
 public:
 	int Id;								//Идентификатор чата
-	QLinkedList<Message> Messages;		//Список сообщений
-};
-
-
-//Чат без сообщений - чтобы при показе списка
-//чатов не грузились сообщения для всех
-class ChatOnlyInfo
-{
-public:
-	ChatOnlyInfo(const Chat&);
-	int Id;								//Идентификатор чата
-	QList<int> Users;					//Список идентификаторов пользователе	
+	std::list<Message> Messages;		//Список сообщений
 };
