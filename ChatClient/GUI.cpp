@@ -31,7 +31,7 @@ void GUI::draw_interface()
 	ConsoleGraphics::drawRect(0, 0, consoleSize.X - 1, headerHeight, BLUE_WHITE);									//Рамка
 	ConsoleGraphics::drawText("CONSOLE CHAT", 0, 0, consoleSize.X - 1, headerHeight, BLUE_WHITE);					//Текст
 
-																													//Поле контактов
+	//Поле контактов
 	contactsWidth = consoleSize.X / 3;																				//Ширина панели контактов
 	ConsoleGraphics::fillRect(0, headerHeight + 1, contactsWidth, consoleSize.Y - 1, CYAN_NONE);					//Заливка
 	ConsoleGraphics::drawRect(0, headerHeight + 1, contactsWidth, 2 * headerHeight + 1, CYAN_BLACK);				//Заголовок
@@ -70,6 +70,13 @@ void GUI::create_controls()
 	rect.right = consoleSize.X - 2;
 	rect.bottom = consoleSize.Y - 3 - inputHeight;
 	chatArea = new TextArea(consoleHandle, rect, GRAY_BLACK);
+
+	//Создает поле ввода
+	rect.left = 1;
+	rect.right = contactsWidth-1;
+	rect.top = headerHeight + 4;
+	rect.bottom = consoleSize.Y - 2;
+	list = new UsersList(consoleHandle, rect, CYAN_BLACK);
 }
 
 

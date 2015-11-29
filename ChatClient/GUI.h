@@ -4,6 +4,7 @@
 #include "TextArea.h"
 #include "ConsoleGraphics.h"
 #include "ConnectionCredentials.h"
+#include "UsersList.h"
 #include <conio.h>
 
 
@@ -23,6 +24,7 @@ public:
 
 	TextArea* inputArea;			//Поле ввода
 	TextArea* chatArea;				//Чаты
+	UsersList* list;				//Список пользователей
 
 private:
 	HANDLE consoleHandle;			//Хэндл косноли

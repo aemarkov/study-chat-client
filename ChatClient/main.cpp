@@ -8,7 +8,6 @@
 
 using namespace std;
 
-string online_to_string(bool);		//Переводит булевый статус в текст
 bool menu();						//Отображает меню
 bool login();						//Отображает меню входа
 bool registration();				//Отображает меню регистрации
@@ -112,6 +111,14 @@ void chat()
 		//Отправка сообщения
 		if (c == '\r')
 		{
+
+			//if (gui.inputArea->GetText() == string("\\users"))
+			//{
+				vector<User> users;
+				client.GetUsers(users);
+				gui.list->DrawUsers(users);
+			//}
+
 			//Отправляем сообщение
 			if (!client.SendChatMessage(gui.inputArea->GetText()))
 			{
@@ -151,15 +158,6 @@ void chat()
 
 		gui.inputArea->AddSymbol(c);
 	}
-}
-
-//Переводит булевый статус в тект
-string online_to_string(bool status)
-{
-	if (status)
-		return "online";
-	else
-		return "offline";
 }
 
 //Печатает сообщение

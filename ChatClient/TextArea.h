@@ -42,8 +42,6 @@ public:
 private:
 	COORD currentCursorPos;
 
-	//Печатает символ
-	//void draw_symbol(char symbol, COORD pos);
 
 	//Переходит к нижней странице, либо создает новую
 	void get_bottom_page();
