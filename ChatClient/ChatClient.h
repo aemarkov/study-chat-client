@@ -16,7 +16,7 @@ class ChatClinet
 
 public:
 
-	ChatClinet(void(*incoming_message_callback)(std::string), void (*users_updated_callback)());
+	ChatClinet(void(*incoming_message_callback)(std::string), void (*users_updated_callback)(std::vector<User>));
 	bool ConnectToServer(const TCHAR* pipe_name);
 	bool Login(std::string name, std::string password);
 	bool Register(std::string name, std::string password);
@@ -33,7 +33,7 @@ private:
 	User me;
 
 	void(*incoming_message_callback)(std::string);
-	void(*users_updated_callback)();
+	void(*users_updated_callback)(std::vector<User>);
 
 	bool send(char* buffer, int size, HANDLE pipe);		//Отправляет данные и размер данных
 	int receive(char*& buffer, HANDLE pipe);			//Принимает данные
@@ -41,5 +41,8 @@ private:
 	bool create_pipe();									//Создает канал и поток для обратной асинхронной связи
 	static DWORD WINAPI thread_func_wrapper(void*);		//Обертка
 	void thread_func();									//Поток слушания
-	void write_message(Message);						//Печатает сообщение
+
+	void decode_message(const char* buffer);			//Декодиирует сообщение
+	void write_message(Message message);				//Печатает сообщение
+	void write_users(char* buffer);						//Декодирует и печатает список пользователей
 };

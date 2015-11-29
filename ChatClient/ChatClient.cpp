@@ -1,6 +1,6 @@
 #include "ChatClient.h"
 
-ChatClinet::ChatClinet(void(*incoming_message_callback)(std::string), void(*users_updated_callback)())
+ChatClinet::ChatClinet(void(*incoming_message_callback)(std::string), void(*users_updated_callback)(std::vector<User>))
 {
 	this->incoming_message_callback = incoming_message_callback;
 	this->users_updated_callback = users_updated_callback;
@@ -235,20 +235,39 @@ void ChatClinet::thread_func()
 		ConnectNamedPipe(my_pipe, NULL);
 		int size = receive(buffer, my_pipe);
 
-		//Принимаем сообщение
-		PacketCoderDecoder::DecodeDataMessage(message, buffer);
-		if (message.Author.Id != me.Id)
-			write_message(message);
-			
+		//Определяем тип сообщения
+		PacketTypes type;
+		memcpy(&type, buffer, sizeof(PacketTypes));
+
+		if (type == PacketTypes::DATA_MESSAGE)
+			decode_message(buffer);
+		else if (type == PacketTypes::DATA_USERS_LIST)
+			write_users(buffer);
+
 		DisconnectNamedPipe(my_pipe);
 
 	}
 }
 
+void ChatClinet::decode_message(const char * buffer)
+{
+	//Принимаем сообщение
+	Message message;
+	PacketCoderDecoder::DecodeDataMessage(message, buffer);
+	if (message.Author.Id != me.Id)
+		write_message(message);
+}
+
 //Пишет сообщение
 void ChatClinet::write_message(Message message)
 {
-	//std::cout << std::setw(10) << std::left << message.Author.Name << message.Text << "\n";
-	//std::cout << "> ";
-	incoming_message_callback(message.Author.Name + ":\n" + message.Text);
+		incoming_message_callback(message.Author.Name + ":\n" + message.Text);
+}
+
+//печатает пользователей
+void ChatClinet::write_users(char* buffer)
+{
+	std::vector<User> users;
+	PacketCoderDecoder::DecodeDataUsersList(users, buffer);
+	users_updated_callback(users);
 }

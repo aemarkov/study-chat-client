@@ -13,8 +13,8 @@ bool login();						//Отображает меню входа
 bool registration();				//Отображает меню регистрации
 void chat();						//Чат
 
-void print_message(string text);	//Печатает пришедшее сообшение
-void update_clients();
+void print_message(string text);			//Печатает пришедшее сообшение
+void update_clients(vector<User> users);	//Печатает пользователей
 
 ChatClinet client(print_message, update_clients);
 GUI gui;
@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
 
 	//Начало чата
 	chat();
+
 	client.Disconnect();
 
 	return 0;
@@ -100,6 +101,14 @@ void chat()
 		return;
 	}
 
+	//Загружаем список пользователей
+	vector<User> users;
+	if (!client.GetUsers(users))
+	{
+		gui.DrawMessage("Error while loading users");
+		return;
+	}
+	update_clients(users);
 
 	string text;
 	bool ctr_mode = false;
@@ -111,14 +120,6 @@ void chat()
 		//Отправка сообщения
 		if (c == '\r')
 		{
-
-			//if (gui.inputArea->GetText() == string("\\users"))
-			//{
-				vector<User> users;
-				client.GetUsers(users);
-				gui.list->DrawUsers(users);
-			//}
-
 			//Отправляем сообщение
 			if (!client.SendChatMessage(gui.inputArea->GetText()))
 			{
@@ -170,7 +171,7 @@ void print_message(string text)
 }
 
 //Обновляет список пользователей
-void update_clients()
+void update_clients(vector<User> users)
 {
-
+	gui.list->DrawUsers(users);
 }
