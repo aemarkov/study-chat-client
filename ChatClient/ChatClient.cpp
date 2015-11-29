@@ -1,5 +1,11 @@
 #include "ChatClient.h"
 
+ChatClinet::ChatClinet(void(*incoming_message_callback)(std::string), void(*users_updated_callback)())
+{
+	this->incoming_message_callback = incoming_message_callback;
+	this->users_updated_callback = users_updated_callback;
+}
+
 //Подключение к серверу
 bool ChatClinet::ConnectToServer(const TCHAR * pipe_name)
 {
@@ -38,7 +44,7 @@ bool ChatClinet::Login(std::string name, std::string password)
 	}
 	delete[] buffer;
 
-	return true;
+	return false;
 }
 
 //Регистрация
@@ -66,7 +72,7 @@ bool ChatClinet::Register(std::string name, std::string password)
 	}
 
 	delete[] buffer;
-	return true;
+	return false;
 }
 
 //Отправляет сообщение
@@ -239,9 +245,10 @@ void ChatClinet::thread_func()
 	}
 }
 
-
+//Пишет сообщение
 void ChatClinet::write_message(Message message)
 {
-	std::cout << std::setw(10) << std::left << message.Author.Name << message.Text << "\n";
-	std::cout << "> ";
+	//std::cout << std::setw(10) << std::left << message.Author.Name << message.Text << "\n";
+	//std::cout << "> ";
+	incoming_message_callback(message.Author.Name + ":\n" + message.Text);
 }

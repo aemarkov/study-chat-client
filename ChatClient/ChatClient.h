@@ -13,8 +13,10 @@
 
 class ChatClinet
 {
+
 public:
 
+	ChatClinet(void(*incoming_message_callback)(std::string), void (*users_updated_callback)());
 	bool ConnectToServer(const TCHAR* pipe_name);
 	bool Login(std::string name, std::string password);
 	bool Register(std::string name, std::string password);
@@ -29,6 +31,9 @@ private:
 	HANDLE pipe;
 	HANDLE my_pipe;
 	User me;
+
+	void(*incoming_message_callback)(std::string);
+	void(*users_updated_callback)();
 
 	bool send(char* buffer, int size, HANDLE pipe);		//Отправляет данные и размер данных
 	int receive(char*& buffer, HANDLE pipe);			//Принимает данные

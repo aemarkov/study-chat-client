@@ -139,16 +139,23 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ChatClient.cpp" />
+    <ClCompile Include="ConsoleGraphics.cpp" />
+    <ClCompile Include="GUI.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Packets.cpp" />
     <ClCompile Include="Serializers.cpp" />
+    <ClCompile Include="TextArea.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Chat.h" />
     <ClInclude Include="ChatClient.h" />
+    <ClInclude Include="ConnectionCredentials.h" />
+    <ClInclude Include="ConsoleGraphics.h" />
+    <ClInclude Include="GUI.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="Packets.h" />
     <ClInclude Include="Serializers.h" />
+    <ClInclude Include="TextArea.h" />
     <ClInclude Include="User.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
