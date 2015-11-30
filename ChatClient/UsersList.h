@@ -5,6 +5,7 @@
 #include <vector>
 #include "User.h"
 #include "ConsoleGraphics.h"
+#include "Locker.h"
 
 //Отображает список пользователей
 class UsersList

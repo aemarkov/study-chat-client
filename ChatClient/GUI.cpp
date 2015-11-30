@@ -8,7 +8,7 @@ COORD GUI::getConsoleSize()
 	COORD size;
 	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
 	size.X = csbi.dwSize.X;
-	size.Y = csbi.srWindow.Bottom-3;
+	size.Y = csbi.srWindow.Bottom+1;
 	return size;
 }
 
@@ -26,7 +26,6 @@ void GUI::draw_interface()
 	*/
 
 	//Заголовок
-	//headerHeight = 2;																								//Высота заголовка
 	ConsoleGraphics::fillRect(0, 0, consoleSize.X - 1, headerHeight, BLUE_NONE);									//Заливка
 	ConsoleGraphics::drawRect(0, 0, consoleSize.X - 1, headerHeight, BLUE_WHITE);									//Рамка
 	ConsoleGraphics::drawText("CONSOLE CHAT", 0, 0, consoleSize.X - 1, headerHeight, BLUE_WHITE);					//Текст
@@ -42,7 +41,6 @@ void GUI::draw_interface()
 
 
 	//Поле ввода
-	//inputHeight = 5;
 	ConsoleGraphics::fillRect(contactsWidth + 1, consoleSize.Y - 1 - inputHeight, consoleSize.X - 1, consoleSize.Y - 1, WHITE_NONE);
 	ConsoleGraphics::drawRect(contactsWidth + 1, consoleSize.Y - 1 - inputHeight, consoleSize.X - 1, consoleSize.Y - 1, WHITE_BLACK);
 

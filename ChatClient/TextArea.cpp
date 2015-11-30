@@ -87,13 +87,19 @@ void TextArea::Redraw()
 //или только печатать
 bool TextArea::add_symbol(char symbol, bool add)
 {
+	Locker::Wait();
+
 	//Задаем нужные аттрибуты текста
 	SetConsoleTextAttribute(consoleHandle, Attributes);
 
 	if (symbol == '\b')
 	{
 		//Удаление символа
-		if (currentCursorPos.X == Rect.left - 1)return false;
+		if (currentCursorPos.X == Rect.left - 1)
+		{
+			return false;
+			Locker::Release();
+		}
 
 		ConsoleGraphics::drawSymbol(' ', currentCursorPos);
 
@@ -176,6 +182,8 @@ bool TextArea::add_symbol(char symbol, bool add)
 		SetCursor();
 	}
 
+
+	Locker::Release();
 	return false;
 }
 

@@ -5,6 +5,7 @@
 #include "ConsoleGraphics.h"
 #include "ConnectionCredentials.h"
 #include "UsersList.h"
+#include "Locker.h"
 #include <conio.h>
 
 

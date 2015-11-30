@@ -12,6 +12,7 @@ UsersList::UsersList(HANDLE consoleHandle, RECT rect, int attributes)
 //Отображает список пользователей
 void UsersList::DrawUsers(std::vector<User> users)
 {
+	Locker::Wait();
 	COORD c;
 
 	//Положение
@@ -38,6 +39,8 @@ void UsersList::DrawUsers(std::vector<User> users)
 		std::cout << std::left << std::setw(iom_width) << users[i].Name << "["<<online_to_char(users[i].IsOnline)<<"]";
 		c.Y++;
 	}
+
+	Locker::Release();
 }
 
 //Переводит статсус в символ

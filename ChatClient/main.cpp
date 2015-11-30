@@ -3,8 +3,8 @@
 
 #include "ChatClient.h"
 #include "User.h"
-
 #include "GUI.h"
+#include "Locker.h"
 
 using namespace std;
 
@@ -108,7 +108,7 @@ void chat()
 		gui.DrawMessage("Error while loading users");
 		return;
 	}
-	//update_clients(users);
+	update_clients(users);
 
 	string text;
 	bool ctr_mode = false;

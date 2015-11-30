@@ -45,6 +45,9 @@
     <ClCompile Include="UsersList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Locker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Chat.h">
@@ -78,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UsersList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Locker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -26,7 +26,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -141,6 +141,7 @@
     <ClCompile Include="ChatClient.cpp" />
     <ClCompile Include="ConsoleGraphics.cpp" />
     <ClCompile Include="GUI.cpp" />
+    <ClCompile Include="Locker.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Packets.cpp" />
     <ClCompile Include="Serializers.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="ConnectionCredentials.h" />
     <ClInclude Include="ConsoleGraphics.h" />
     <ClInclude Include="GUI.h" />
+    <ClInclude Include="Locker.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="Packets.h" />
     <ClInclude Include="Serializers.h" />

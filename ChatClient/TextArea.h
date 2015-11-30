@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include "ConsoleGraphics.h"
+#include "Locker.h"
 
 //”правление текстом в рамках ограниченного пр€моугольника
 class TextArea
