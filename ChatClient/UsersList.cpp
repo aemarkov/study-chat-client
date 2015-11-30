@@ -34,9 +34,9 @@ void UsersList::DrawUsers(std::vector<User> users)
 	//Отрисовка пользоватеелй
 	for (int i = 0; i < users.size(); i++)
 	{
+		SetConsoleCursorPosition(consoleHandle, c);
 		std::cout << std::left << std::setw(iom_width) << users[i].Name << "["<<online_to_char(users[i].IsOnline)<<"]";
 		c.Y++;
-		SetConsoleCursorPosition(consoleHandle, c);
 	}
 }
 

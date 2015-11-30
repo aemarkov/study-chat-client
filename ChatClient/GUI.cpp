@@ -8,7 +8,7 @@ COORD GUI::getConsoleSize()
 	COORD size;
 	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
 	size.X = csbi.dwSize.X;
-	size.Y = csbi.srWindow.Bottom + 1;
+	size.Y = csbi.srWindow.Bottom-3;
 	return size;
 }
 
@@ -18,7 +18,7 @@ void GUI::draw_interface()
 
 	/*
 	|---------------------|
-	|-----|----------------
+	|-----|---------------|
 	|-----|               |
 	|     |               |
 	|     |---------------|
