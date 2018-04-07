@@ -113,7 +113,7 @@ void chat()
 	string text;
 	bool ctr_mode = false;
 
-	while (text!="\exit")
+	while (text!="\\exit")
 	{
 		char c = getch();
 
